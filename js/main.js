@@ -5,7 +5,7 @@ $(function() {
     var bounds = [];
     var selectedRegion = [];
     var citites = ['Buenos Aires', 'Mendoza', 'Bariloche', 'El Calafate', 'Puerto Madryn']; //default cities in case
-    var mymap = L.map('mapid').setView([0, 0], 4);
+    var mymap = L.map('mapid', {zoomControl: false}).setView([0, 0], 4);
     //reff types of maps
     //https://leaflet-extras.github.io/leaflet-providers/preview/
     // L.tileLayer('https://korona.geog.uni-heidelberg.de/tiles/roads/x={x}&y={y}&z={z}?access_token='+accessToken, {
@@ -14,6 +14,9 @@ $(function() {
     //     id: 'mapbox.streets',
     //     accessToken: 'your.mapbox.access.token'
     // }).addTo(mymap);
+    L.control.zoom({
+        position: 'bottomright'
+    }).addTo(mymap);
     L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
         maxZoom: 19,
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Tiles style by <a href="https://www.hotosm.org/" target="_blank">Humanitarian OpenStreetMap Team</a> hosted by <a href="https://openstreetmap.fr/" target="_blank">OpenStreetMap France</a>'
