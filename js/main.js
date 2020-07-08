@@ -61,7 +61,7 @@ $(function() {
         for (var city in citites) {
             if (citites.hasOwnProperty(city)) {
                 if(noDataForCities.indexOf(citites[city]) == -1){
-                    $.getJSON("http://api.openweathermap.org/data/2.5/weather?q="+citites[city]+", "+countryCode+"&APPID=" + appId,
+                    $.getJSON("//api.openweathermap.org/data/2.5/weather?q="+citites[city]+", "+countryCode+"&APPID=" + appId,
                         function(data) {
                             //console.log(data);
                             markers.addLayer(
