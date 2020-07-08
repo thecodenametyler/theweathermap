@@ -52,7 +52,6 @@ $(function() {
             citites.shift();
             plotMarkers();
             clearInterval(checkifdone);
-            console.log('checkIfStateLoaded');
         }
     }
 
@@ -64,36 +63,38 @@ $(function() {
         //uncomment to clear all markers after selection of another region
         //markers.clearLayers();
         //bounds = [];
-        console.log(citites);
+        var noDataForCities = ['Flacq', 'Cargados Carajos', 'Grand Port', 'Black River', 'Agalega Islands', 'Savanne', 'Plaines Wilhems'];
 
         for (var city in citites) {
             if (citites.hasOwnProperty(city)) {
-            //     $.getJSON("http://api.openweathermap.org/data/2.5/weather?q="+citites[city]+", "+countryCode+"&APPID=" + appId,
-            //         function(data) {
-            //             //console.log(data);
-            //             markers.addLayer(
-            //                 L.marker(
-            //                     [data.coord.lat, data.coord.lon],
-            //                     {icon: new LeafIcon({iconUrl: '../img/forcasticon/'+data.weather[0].icon+'.svg'})
-            //                 })
-            //                 .bindTooltip(""+Math.round((data.main.temp - (273.15)) * 10) / 10+"&deg;C", 
-            //                 {
-            //                     permanent: true, 
-            //                     direction: 'center'
-            //                 })
-            //             );
-            //             mymap.addLayer(markers);
-            //             bounds.push([data.coord.lat, data.coord.lon]);
-            //             mymap.fitBounds(bounds);
-            //         }
-            //     ).done(function(data){
-            //         if(data.cod == 200) {
-            //             console.log(data.name);
-            //         }
-            //     })
-            //     .fail(function(error){
-            //         console.log('error');
-            //     });
+                if(noDataForCities.indexOf(citites[city]) == -1){
+                    $.getJSON("http://api.openweathermap.org/data/2.5/weather?q="+citites[city]+", "+countryCode+"&APPID=" + appId,
+                        function(data) {
+                            //console.log(data);
+                            markers.addLayer(
+                                L.marker(
+                                    [data.coord.lat, data.coord.lon],
+                                    {icon: new LeafIcon({iconUrl: 'img/forcasticon/'+data.weather[0].icon+'.svg'})
+                                })
+                                .bindTooltip(""+Math.round((data.main.temp - (273.15)) * 10) / 10+"&deg;C",
+                                {
+                                    permanent: true,
+                                    direction: 'center'
+                                })
+                            );
+                            mymap.addLayer(markers);
+                            bounds.push([data.coord.lat, data.coord.lon]);
+                            mymap.fitBounds(bounds);
+                        }
+                    ).done(function(data){
+                        if(data.cod == 200) {
+                            // console.log('done : ' + data.name);
+                        }
+                    })
+                    .fail(function(error){
+                        console.log(error.responseJSON.message);
+                    });
+                }
             }
         }
     }
@@ -106,7 +107,6 @@ $(function() {
             checkifCitiesdone = setInterval(checkIfCitiesLoaded, 1000);
         }
         selectedRegion.push(this.value);
-        console.log('checkIfCitiesLoaded');
     });
 
     function checkIfCitiesLoaded() {
@@ -128,32 +128,72 @@ $(function() {
 
 //Local Data by pass the Daily geodata.solutions request count limits for local projects
 var localData = {
-    "country" : "MU",
-    "districts": [
-        "Agalega Islands",
-        "Black River",
-        "Cargados Carajos",
-        "Flacq", "Grand Port",
-        "Moka", "Pamplemousses",
-        "Plaines Wilhems",
-        "Port Louis",
-        "Riviere du Rempart",
-        "Rodrigues",
-        "Savanne"
-    ],
-    "regions": {
-        "Agalega Islands": ["Agalega Islands"],
-        "Black River": ["Albion", "Cascavelle", "Flic en Flac", "Grande Riviere Noire", "Gros Cailloux", "Petite Case Noyale", "Petite Riviere", "Tamarin"],
-        "Cargados Carajos": ["Cargados Carajos"],
-        "Flacq": ["Bel Air Riviere Seche", "Bon Accueil", "Brisee Verdiere", "Camp Ithier", "Camp de Masque", "Centre de Flacq", "Clemencia", "Ecroignard", "Grande Riviere Sud Est", "Lalmatie", "Laventure", "Mare La Chaux", "Olivia", "Poste de Flacq", "Quatre Cocos", "Quatre Soeurs", "Queen Victoria", "Saint Julien", "Sebastopol"],
-        "Grand Port" : ["Bambous Virieux", "Beau Vallon", "Bois des Amourettes", "Cluny", "Grand Sable", "Mahebourg", "New Grove", "Nouvelle France", "Plaine Magnien", "Rose Belle", "Saint Hubert"],
-        "Moka" : ["Camp Thorel", "Dagotiere", "Dubreuil", "Melrose", "Moka", "Pailles", "Providence", "Quartier Militaire", "Saint Pierre", "Verdun"],
-        "Pamplemousses" : ["Arsenal", "Calebasses", "Congomah", "Creve Coeur", "Fond du Sac", "Grande Pointe aux Piments", "Le Hochet", "Long Mountain", "Morcellemont Saint Andre", "Notre Dame", "Pamplemousses", "Plaine des Papayes", "Terre Rouge", "Triolet"],
-        "Plaines Wilhems" : ["Beau Bassin", "Curepipe", "Ebene", "Midlands", "Quatre Bornes", "Vacoas"],
-        "Port Louis" : ["Port Louis"],
-        "Riviere du Rempart" : ["Amaury", "Cap Malheureux", "Cottage", "Esperance Trebuchet", "Goodlands", "Grand Baie", "Grand Gaube", "Mapou", "Petit Raffray", "Piton", "Plaines des Roches", "Riviere du Rempart", "Roche Terre", "Roches Noire", "The Vale"],
-        "Rodrigues" : ["Baie aux Huitres", "Port Mathurin"],
-        "Savanne" : ["Camp Diable", "Chamouny", "Chemin Grenier", "Grand Bois", "Riviere des Anguilles", "Saint Aubin", "Souillac", "Surinam"]
+    "countries" : ["MU"],
+    "MU" : {
+        "districts": [
+            {
+                "stateid" : "21",
+                "name" : "Agalega Islands"
+            },
+            {
+                "stateid" : "12",
+                "name" : "Black River"
+            },
+            {
+                "stateid" : "22",
+                "name" : "Cargados Carajos"
+            },
+            {
+                "stateid" : "13",
+                "name" : "Flacq"
+            },
+            {
+                "stateid" : "14",
+                "name" : "Grand Port"
+            },
+            {
+                "stateid" : "15",
+                "name" : "Moka"
+            },
+            {
+                "stateid" : "16",
+                "name" : "Pamplemousses"
+            },
+            {
+                "stateid" : "17",
+                "name" : "Plaines Wilhems"
+            },
+            {
+                "stateid" : "18",
+                "name" : "Port Louis"
+            },
+            {
+                "stateid" : "19",
+                "name" : "Riviere du Rempart"
+            },
+            {
+                "stateid" : "23",
+                "name" : "Rodrigues"
+            },
+            {
+                "stateid" : "20",
+                "name" : "Savanne"
+            }
+        ],
+        "regions": {
+            "Agalega Islands": ["Agalega Islands"],
+            "Black River": ["Albion", "Cascavelle", "Flic en Flac", "Grande Riviere Noire", "Gros Cailloux", "Petite Case Noyale", "Petite Riviere", "Tamarin"],
+            "Cargados Carajos": ["Cargados Carajos"],
+            "Flacq": ["Bel Air Riviere Seche", "Bon Accueil", "Brisee Verdiere", "Camp Ithier", "Camp de Masque", "Centre de Flacq", "Clemencia", "Ecroignard", "Grande Riviere Sud Est", "Lalmatie", "Laventure", "Mare La Chaux", "Olivia", "Poste de Flacq", "Quatre Cocos", "Quatre Soeurs", "Queen Victoria", "Saint Julien", "Sebastopol"],
+            "Grand Port" : ["Bambous Virieux", "Beau Vallon", "Bois des Amourettes", "Cluny", "Grand Sable", "Mahebourg", "New Grove", "Nouvelle France", "Plaine Magnien", "Rose Belle", "Saint Hubert"],
+            "Moka" : ["Camp Thorel", "Dagotiere", "Dubreuil", "Melrose", "Moka", "Pailles", "Providence", "Quartier Militaire", "Saint Pierre", "Verdun"],
+            "Pamplemousses" : ["Arsenal", "Calebasses", "Congomah", "Creve Coeur", "Fond du Sac", "Grande Pointe aux Piments", "Le Hochet", "Long Mountain", "Morcellemont Saint Andre", "Notre Dame", "Pamplemousses", "Plaine des Papayes", "Terre Rouge", "Triolet"],
+            "Plaines Wilhems" : ["Beau Bassin", "Curepipe", "Ebene", "Midlands", "Quatre Bornes", "Vacoas"],
+            "Port Louis" : ["Port Louis"],
+            "Riviere du Rempart" : ["Amaury", "Cap Malheureux", "Cottage", "Esperance Trebuchet", "Goodlands", "Grand Baie", "Grand Gaube", "Mapou", "Petit Raffray", "Piton", "Plaines des Roches", "Riviere du Rempart", "Roche Terre", "Roches Noire", "The Vale"],
+            "Rodrigues" : ["Baie aux Huitres", "Port Mathurin"],
+            "Savanne" : ["Camp Diable", "Chamouny", "Chemin Grenier", "Grand Bois", "Riviere des Anguilles", "Saint Aubin", "Souillac", "Surinam"]
+        }
     }
 }
 console.log(localData);
