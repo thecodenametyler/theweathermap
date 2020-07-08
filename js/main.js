@@ -1,32 +1,22 @@
 $(function() {
     var appId = "3317c0c8845e36421007f32c3c4f5b02"; //key for openweathermap
-    var accessToken = 'pk.eyJ1Ijoicml0ZXNoLXN1Z2FyIiwiYSI6ImNqcmhkZGJnMTJtM2k0M24weDFobDNuMjkifQ.B18HvNAgxnCAaRkNKN7KEw'; //key for leaflet
     var countryCode = "";
     var bounds = [];
     var selectedRegion = [];
     var citites = ['Buenos Aires', 'Mendoza', 'Bariloche', 'El Calafate', 'Puerto Madryn']; //default cities in case
-    var mymap = L.map('mapid', {zoomControl: false}).setView([0, 0], 4);
-    //reff types of maps
-    //https://leaflet-extras.github.io/leaflet-providers/preview/
-    // L.tileLayer('https://korona.geog.uni-heidelberg.de/tiles/roads/x={x}&y={y}&z={z}?access_token='+accessToken, {
-    //     attribution: 'Imagery from <a href="http://giscience.uni-hd.de/">GIScience Research Group @ University of Heidelberg</a> &mdash; Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-    //     maxZoom: 18,
-    //     id: 'mapbox.streets',
-    //     accessToken: 'your.mapbox.access.token'
-    // }).addTo(mymap);
+    var theMap = L.map('mapid', {zoomControl: false}).setView([0, 0], 4);
+
     L.control.zoom({
         position: 'bottomright'
-    }).addTo(mymap);
+    }).addTo(theMap);
     L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
         maxZoom: 19,
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Tiles style by <a href="https://www.hotosm.org/" target="_blank">Humanitarian OpenStreetMap Team</a> hosted by <a href="https://openstreetmap.fr/" target="_blank">OpenStreetMap France</a>'
-    }).addTo(mymap);
+    }).addTo(theMap);
 
     //Defining an icon class
     var LeafIcon = L.Icon.extend({
         options: {
-            //iconUrl: '../img/forcasticon/01d.svg',
-            //shadowUrl: '../img/forcasticon/01d.svg',
             iconSize:     [38, 95],
             shadowSize:   [50, 64],
             iconAnchor:   [22, 94],
@@ -85,9 +75,9 @@ $(function() {
                                     direction: 'center'
                                 })
                             );
-                            mymap.addLayer(markers);
+                            theMap.addLayer(markers);
                             bounds.push([data.coord.lat, data.coord.lon]);
-                            mymap.fitBounds(bounds);
+                            theMap.fitBounds(bounds);
                         }
                     ).done(function(data){
                         if(data.cod == 200) {
