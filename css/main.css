@@ -10,12 +10,23 @@ body {
     position: absolute;
     z-index: 999;
     background: #fff;
-    padding: 20px;
+    padding: 16px;
+    border-radius: 0 0 10px 0;
+    border: 1px solid #e4e4e4;
 }
 .header_wrapper h1,
 .header_wrapper p {
     margin: 0;
     margin-bottom: 10px;
 }
-.header_form {
+
+.leaflet-container .leaflet-marker-pane img {
+    background: rgba(0,0,0,0.4);
+    line-height: 1;
+    display: block;
+    height: auto !important;
+    margin-top: -70px !important;
+    margin-left: -28px !important;
+    padding: 6px;
+    border-radius: 6px;
 }

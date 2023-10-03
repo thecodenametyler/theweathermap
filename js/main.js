@@ -49,7 +49,7 @@ $(function() {
                                     [data.coord.lat, data.coord.lon],
                                     {icon: new LeafIcon({iconUrl: 'img/forcasticon/'+data.weather[0].icon+'.svg'})
                                 })
-                                .bindTooltip(data.name + " " + Math.round((data.main.temp - (273.15)) * 10) / 10+"&deg;C <small>" + data.weather[0].main +"</small>",
+                                .bindTooltip(data.name + " <strong>" + Math.round((data.main.temp - (273.15)) * 10) / 10+"&deg;C</strong> <small>" + data.weather[0].main +"</small>",
                                 {
                                     permanent: true,
                                     direction: 'center'
